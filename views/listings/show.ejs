@@ -1,9 +1,9 @@
 <% layout("layouts/boilerplate") %>
-<script>
-    let mapToken="<%= process.env.MAP_TOKEN %>";
-    const rawCoordinates="<%- JSON.stringify(listing.geometry.coordinates)%>";
-    window.placeName = "<%= listing.location %>";
-</script>
+    <script>
+        let mapToken = "<%= process.env.MAP_TOKEN %>";
+        const rawCoordinates = "<%- JSON.stringify(listing.geometry.coordinates)%>";
+        window.placeName = "<%= listing.location %>";
+    </script>
     <div class="row mt-3">
         <div class="col-8 offset-3">
 
@@ -31,7 +31,9 @@
                 <p class="card-text">
                     <%= listing.country %>
                 </p>
-                <p class="card-text"><strong>Category:</strong> <%= listing.category %></p>
+                <p class="card-text"><strong>Category:</strong>
+                    <%= listing.category %>
+                </p>
 
                 </p>
             </div>
@@ -103,10 +105,12 @@
                                                 </p>
 
                                             </div>
-                                            <form class="mb-3" method="POST"
-                                                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                                                <button class="btn btn-sm btn-dark">Delete</button>
-                                            </form>
+                                            <% if (currUser && currUser._id.equals(review.author._id)) { %>
+                                                <form class="mb-3" method="POST"
+                                                    action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                                    <button class="btn btn-sm btn-dark">Delete</button>
+                                                </form>
+                                                <% } %>
                                         </div>
                                         <%} %>
                                 </div>
@@ -117,5 +121,5 @@
                     <div id="map"></div>
                 </div>
     </div>
-  
-<script src="/js/map.js"></script>
+
+    <script src="/js/map.js"></script>
