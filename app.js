@@ -61,9 +61,10 @@ const sessionOptions={
         httpOnly:true,
     }
 }
-// app.get("/",(req,res)=>{
-//     res.send("root working");
-// })
+app.get("/", (req, res) => {
+  res.redirect("/listings"); // or your actual homepage route
+});
+
 
 app.use(session(sessionOptions));
 app.use(flash());
