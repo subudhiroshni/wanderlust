@@ -41,6 +41,25 @@
       color: inherit;
       /* Inherits text color from parent */
     }
+
+    .wishlist-form {
+      position: absolute;
+      top: 10px;
+      right: 1.5rem;
+      z-index: 100;
+    }
+
+    .wishlist-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: gray;
+    }
+
+    .wishlist-btn:hover {
+      transform: scale(1.2);
+    }
   </style>
 
   <body>
@@ -110,26 +129,61 @@
       <% } %>
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
           <% for(let listing of allListings){ %>
-            <a href="/listings/<%= listing._id  %>" class="listing-link">
-              <div class="card col listing-card">
-                <img src="<%=listing.image.url%>" class="card-img-top" alt="listing_image" style="height:20rem;">
-                <div class="card-img-overlay"></div>
-                <div class="card-body flex flex-row">
-                  <p class="card-text mb-1">
-                    <b>
-                      <%= listing.title %>
-                    </b>
-                  </p>
-                  <div class="price-tax-line">
-                    <span class="listing-price">
-                      &#8377;<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %> / night
-                    </span>
-                    &nbsp;<span class="tax-info">+ 18% GST</span>
-                  </div>
+            <div class="card-wrapper" style="position: relative;">
+              <!-- <%if(currUser){%>
+              <form action="/wishlist/<%=listing._id%>" method="POST" class="wishlist-form">
+                <% if (currUser && currUser.wishlist.includes(listing._id)) { %>
+                  <button type="submit" class="wishlist-btn"><i class="fa-solid fa-heart"
+                      style="color:red;"></i></button>
+                  <% } else { %>
+                    <button type="submit" class="wishlist-btn"><i class="fa-regular fa-heart"
+                        style="color:gray;"></i></button>
+                    <% } %>
+              
+              </form>
+              <%}%> -->
+              <%if(!currUser){%>
+                <form action="/wishlist/<%=listing._id%>" method="POST" class="wishlist-form">
+                  <button type="button" class="wishlist-btn login-redirect">
+                    <i class="fa-regular fa-heart" style="color: gray;"></i>
+                  </button>
 
-                </div>
-              </div>
-            </a>
+                </form>
+                <%}else{%>
+                  <form action="/wishlist/<%=listing._id%>" method="POST" class="wishlist-form">
+                    <% if (currUser && currUser.wishlist.includes(listing._id)) { %>
+                      <button type="submit" class="wishlist-btn"><i class="fa-solid fa-heart"
+                          style="color:red;"></i></button>
+                      <% } else { %>
+                        <button type="submit" class="wishlist-btn"><i class="fa-regular fa-heart"
+                            style="color:gray;"></i></button>
+                        <% } %>
+
+                  </form>
+                  <%}%>
+                    <a href="/listings/<%= listing._id  %>" class="listing-link">
+                      <div class="card col listing-card" style="position: relative;">
+                        <img src="<%=listing.image.url%>" class="card-img-top" alt="listing_image"
+                          style="height:20rem;">
+                        <div class="card-img-overlay"></div>
+                        <div class="card-body flex flex-row">
+                          <p class="card-text mb-1">
+                            <b>
+                              <%= listing.title %>
+                            </b>
+                          </p>
+                          <div class="price-tax-line">
+                            <span class="listing-price">
+                              &#8377;<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "N/A" %> /
+                                night
+                            </span>
+                            &nbsp;<span class="tax-info">+ 18% GST = &#8377;<%= listing.price ?
+                                Number(listing.price*1.18).toLocaleString("en-IN") : "N/A" %> / night</span>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+            </div>
             <%}%>
         </div>
 
@@ -146,4 +200,62 @@
         }
       }
     })
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll('.login-redirect').forEach(button => {
+        button.addEventListener('click', () => {
+          window.location.href = "/login";
+        });
+      });
+    });
+
+    document.querySelectorAll(".wishlist-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        console.log("❤️ Wishlist clicked");
+      });
+    });
+    document.querySelectorAll('.listing-card').forEach(card => {
+      const form = card.querySelector('.wishlist-form');
+
+      card.addEventListener('mouseenter', () => {
+        if (form) form.style.display = 'block';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        if (form) form.style.display = 'none';
+      });
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll('.wishlist-form').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();       // prevent default form submission
+          e.stopPropagation();      // prevent click from bubbling to <a>
+
+          const response = await fetch(form.action, {
+            method: "POST",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+          });
+
+          if (response.ok) {
+            console.log("Wishlist updated successfully");
+            const icon = form.querySelector("i");
+            if (icon.classList.contains("fa-regular")) {
+              // Switch to filled red heart
+              icon.classList.remove("fa-regular");
+              icon.classList.add("fa-solid");
+              icon.style.color = "red";
+            } else {
+              // Switch to hollow gray heart
+              icon.classList.remove("fa-solid");
+              icon.classList.add("fa-regular");
+              icon.style.color = "gray";
+            }
+          } else {
+            console.error("Wishlist update failed");
+          }
+        });
+      });
+    });
+
+
+
   </script>

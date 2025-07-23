@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const Listing = require("../models/listing.js");
+const user = require('../models/user.js');
 
 // import { query } from 'express';
 const mapToken = process.env.MAP_TOKEN;
@@ -21,7 +22,7 @@ module.exports.index = async (req, res) => {
     allListings = await Listing.find({});
   }
 
-  res.render("listings/index.ejs", { allListings, category: category || "All" });
+  res.render("listings/index.ejs", { allListings, category: category || "All",user });
 };
 
 
@@ -207,6 +208,5 @@ module.exports.destroyListing = async (req, res) => {
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
     req.flash("success", "Listing Deleted!");
-
     res.redirect("/listings");
 }

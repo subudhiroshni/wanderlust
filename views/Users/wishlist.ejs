@@ -1,0 +1,37 @@
+<% layout("layouts/boilerplate") %>
+
+<h3 class="text-center m-3 fw-bold fs-3" style="color: #333;">
+  Your Wishlist
+</h3>
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+  <% if (listings.length === 0) { %>
+    <p>No items in your wishlist yet.</p>
+  <% } else { %>
+    <% listings.forEach(listing => { %>
+      <div class="col mb-4">
+        <div class="card-wrapper" style="position: relative;">
+          <div class="card listing-card">
+            <img src="<%= listing.image.url %>" class="card-img-top" alt="Listing Image" style="height: 20rem; object-fit: cover;">
+            <div class="card-body">
+              <p class="card-text mb-1"><b><%= listing.title %></b></p>
+              <div class="price-tax-line">
+                <span class="listing-price">
+                  ₹<%= Number(listing.price).toLocaleString("en-IN") %> / night
+                </span>
+                <span class="tax-info">
+                  +18% GST = ₹<%= Number(listing.price * 1.18).toLocaleString("en-IN") %> / night
+                </span>
+              </div>
+            </div>
+
+            <!-- Remove Button -->
+            <form action="/wishlist/<%= listing._id %>?_method=DELETE" method="POST">
+              <button class="btn btn-danger mt-3 ">Remove from Wishlist</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>

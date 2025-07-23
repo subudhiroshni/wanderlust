@@ -60,6 +60,10 @@ body{
     margin-bottom: 2rem;
 }
 
+/* .listing-card:hover .wishlist-form{
+      display: block;
+} */
+
 .card-img-top{
     border-radius: 1rem !important;
     width: 100% !important;
@@ -87,6 +91,7 @@ body{
     opacity: 0.2;
     background-color: white;
 }
+
 
 .add-btn,.edit-btn{
     background-color: #fe424d !important;

@@ -44,3 +44,38 @@ module.exports.logout=(req,res,next)=>{
         res.redirect("/listings");
     })
 }
+
+module.exports.toggleWishlist=async(req,res,next)=>{
+    const listingId=req.params.id;//Gets listing id from the url
+    const user=await User.findById(req.user._id);//Gets currently logged-in user's ID from session
+    const alreadyInWishlist=user.wishlist.includes(listingId);
+    if(alreadyInWishlist){
+        user.wishlist.pull(listingId);
+    }else{
+        user.wishlist.push(listingId);
+    }
+    await user.save();
+    res.status(200).json({success:true,wishlist:user.wishlist});
+};
+
+module.exports.wishlist=async(req,res)=>{
+    const user=await User.findById(req.user._id).populate("wishlist");
+    res.render("Users/wishlist",{listings:user.wishlist});
+}
+
+
+module.exports.destroyWishlist = async (req, res) => {
+    const listingId = req.params.id;
+    const user = await User.findById(req.user._id);
+
+    const alreadyInWishlist = user.wishlist.includes(listingId);
+    if (alreadyInWishlist) {
+        user.wishlist.pull(listingId); // removes it from the array
+        await user.save();
+        req.flash("success", "Listing removed from wishlist!");
+    } else {
+        req.flash("error", "Listing not found in wishlist!");
+    }
+
+    res.redirect("/wishlist"); // or wherever you want to go after
+};
