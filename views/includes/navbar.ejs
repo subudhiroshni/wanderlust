@@ -1,12 +1,43 @@
 <style>
-    
+    .centered-search {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: 0.5rem;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 500px;
+    }
+
+    @media (max-width: 576px) {
+        .centered-search {
+            max-width: 300px;
+        }
+    }
+
+    .search-bar {
+        width: 100%;
+        max-width: 32rem;
+    }
+
+    @media (max-width: 768px) {
+        .search-bar {
+            max-width: 22rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .search-bar {
+            max-width: 16rem;
+        }
+    }
 
     .search-btn {
         background-color: #fe424d;
         color: #fff;
         border-radius: 25px;
         padding: 0 1rem 0 1rem;
-        
+
     }
 
     .search-btn:hover {
@@ -24,30 +55,55 @@
         padding: 0.5rem 0.01rem 0.5rem 3rem;
         align-items: center;
     }
+
+    .navbar-blur {
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.6);
+        /* semi-transparent white */
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 0.7rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    @supports not (backdrop-filter: blur(8px)) {
+        .navbar-blur {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    }
+
+    body.dark .navbar-blur {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
 </style>
 
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+<nav class="navbar navbar-expand-xl bg-body-light border-bottom sticky-top ">
+    <div class="container-fluid d-flex justify-content-between align-items-center ">
+
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand me-2" href="/listings">
+                <i class="fa-regular fa-compass"></i>
+            </a>
+            <a class="nav-link" href="/listings">Explore</a>
+        </div>
+
+        <div class="d-none d-sm-flex flex-grow-1 justify-content-center align-items-center centered-search">
+            <form action="/listings/search" method="GET" class="d-flex w-100 search-bar" role="search">
+                <input class="form-control me-2 search-inp" type="search" name="query"
+                    placeholder="Search destination" />
+                <button class="btn search-btn" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>Search
+                </button>
+            </form>
+        </div>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup">
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-
-                <a class="nav-link" href="/listings">Explore</a>
-
-            </div>
-            <div class="navbar-nav ms-auto mt-3">
-                <form action="/listings/search" method="GET" class="d-flex" role="search">
-                    <input class="form-control me-2 search-inp" type="search" name="query"
-                        placeholder="Search destination" />
-                    <button class="btn search-btn" type="submit">
-                        <i class="fa-solid fa-magnifying-glass"></i>Search</button>
-                </form>
-            </div>
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto mt-2 mt-md-0">
                 <a class="nav-link" href="/listings/new">Airbnb your home</a>
                 <% if (typeof currUser==="undefined" || !currUser) { %>
                     <a class="nav-link" href="/signup"><b>Sign Up</b></a>
@@ -56,8 +112,9 @@
                         <a class="nav-link" href="/wishlist">Wishlist</a>
                         <a class="nav-link" href="/logout"><b>Logout</b></a>
                         <% } %>
-
             </div>
         </div>
     </div>
 </nav>
+
+

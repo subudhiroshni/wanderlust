@@ -2,26 +2,32 @@
   <style>
     #filters {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 1rem;
+      gap: 1rem;
       align-items: center;
     }
 
     .filter {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
       text-align: center;
-      margin-right: 2rem;
-      margin-top: 2rem;
+      min-width: 80px;
       opacity: 0.7;
+    }
+
+    .filter p {
+      font-size: 0.75rem;
+      margin: 0.25rem 0 0 0;
     }
 
     .filter:hover {
       opacity: 1;
       cursor: pointer;
     }
-
-    .filter p {
-      font-size: 0.8rem;
-    }
-
     .tax-info {
       display: none;
     }
@@ -31,15 +37,15 @@
       border-radius: 1rem;
       height: 3.25rem;
       padding: 1rem;
-      margin-left: 2rem;
+      margin-left: 1rem;
       display: flex;
       align-items: center;
+      flex: 0 0 auto;
     }
 
     a.filter {
       text-decoration: none;
       color: inherit;
-      /* Inherits text color from parent */
     }
 
     .wishlist-form {
@@ -63,7 +69,7 @@
   </style>
 
   <body>
-    <!-- <h3>All listings</h3> -->
+
     <div id="filters">
       <a href="/listings?category=Trending" class="filter">
         <div><i class="fa-solid fa-fire"></i></div>
